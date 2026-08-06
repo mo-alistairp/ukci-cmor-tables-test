@@ -9,32 +9,46 @@ Note that this module must be installed somehow, e.g. through inclusion in
 a .pth file in your local python site-packages directory
 ($HOME/.local/python3.8/site-packages/cdds.pth)
 """
+
 import logging
 import os
 from typing import Type
 
-from cdds.common.plugins.file_info import ModelFileInfo, GlobalModelFileInfo
+from cdds.common.plugins.base.base_models import BaseModelParameters, BaseModelStore, ModelId
+from cdds.common.plugins.base.base_plugin import BasePlugin
+from cdds.common.plugins.base.base_streams import BaseStreamInfo, BaseStreamStore
+from cdds.common.plugins.cmip6.cmip6_attributes import Cmip6GlobalAttributes
+from cdds.common.plugins.cmip6.cmip6_grid import Cmip6GridLabel
+from cdds.common.plugins.common import LoadResults
+from cdds.common.plugins.file_info import GlobalModelFileInfo, ModelFileInfo
 from cdds.common.plugins.grid import GridLabel
 from cdds.common.plugins.models import ModelParameters
-from cdds.common.plugins.base.base_plugin import BasePlugin
-from cdds.common.plugins.common import LoadResults
-
-from cdds.common.plugins.base.base_models import BaseModelStore
-from cdds.common.plugins.base.base_streams import BaseStreamInfo, BaseStreamStore
-
-from cdds.common.plugins.cmip6.cmip6_models import (
-    UKESM1_0_LL_Params, HadGEM3_GC31_LL_Params)
-from cdds.common.plugins.cmip6.cmip6_grid import Cmip6GridLabel
-import cdds.common.plugins.cmip6 as cmip6
 from cdds.common.plugins.streams import StreamInfo
 
+ARISE_LICENSE = (
+    "ARISE data produced by MOHC is licensed under the Open Government License v3 "
+    "(https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/)"
+)
 
-ARISE_LICENSE = ('ARISE data produced by MOHC is licensed under the Open Government License v3 '
-                 '(https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/)')
+
+class AriseModelId(ModelId):
+    """
+    Represents the ID of an Arise model.
+    """
+
+    def get_json_file(self) -> str:
+        """
+        Returns the json file name for a model containing the model ID as identifier.
+
+        :return: Json file name for the model with current ID
+        :rtype: str
+        """
+        return "{}.json".format(self.value)
+
+    UKESM1_0_LL = "UKESM1-0-LL"
 
 
 class ArisePlugin(BasePlugin):
-
     def __init__(self):
         super(ArisePlugin, self).__init__("ARISE")
 
@@ -43,7 +57,7 @@ class ArisePlugin(BasePlugin):
         return models_store.get(model_id)
 
     def overload_models_parameters(self, source_dir: str) -> None:
-        models_store = AriseModelsStore.instance()
+        models_store = AriseModelStore.instance()
         models_store.overload_params(source_dir)
 
     def grid_labels(self) -> Type[GridLabel]:
@@ -54,6 +68,18 @@ class ArisePlugin(BasePlugin):
         stream_store = AriseStreamStore.instance()
         return stream_store.get()
 
+    def global_attributes(self, request: "Request") -> Cmip6GlobalAttributes:
+        """
+        Returns the global attributes for CMIP6. The given request contains all information
+        about the global attributes.
+
+        :param request: Dictionary containing information about the global attributes
+        :type request: Dict[str, Any]
+        :return: Class to store and manage the global attributes for CMIP6
+        :rtype: Cmip6GlobalAttributes
+        """
+        return Cmip6GlobalAttributes(request)
+
     def model_file_info(self) -> ModelFileInfo:
         return GlobalModelFileInfo()
 
@@ -61,51 +87,79 @@ class ArisePlugin(BasePlugin):
         return ARISE_LICENSE
 
     def mip_table_dir(self) -> str:
-        return '{}/mip_tables/ARISE/for_functional_tests'.format(os.environ['CDDS_ETC'])
+        return "{}/mip_tables/ARISE/for_functional_tests".format(os.environ["CDDS_ETC"])
 
+
+class UKESM1_0_LL_Params(BaseModelParameters):
+    """
+    Class to store the parameters for the UKESM1_0_LL model.
+    """
+
+    def __init__(self) -> None:
+        super(UKESM1_0_LL_Params, self).__init__(AriseModelId.UKESM1_0_LL)
+
+    @property
+    def model_version(self) -> str:
+        """
+        Returns the model version of the UKESM1_0_LL model.
+
+        :return: Model version of UKESM1_0_LL
+        :rtype: str
+        """
+        return "1.0"
+
+    @property
+    def data_request_version(self) -> str:
+        """
+        Returns the data request version of the UKESM1_0_LL model.
+
+        :return: Data request version of UKESM1_0_LL
+        :rtype: str
+        """
+        return "01.00.17"
+
+    @property
+    def um_version(self) -> str:
+        """
+        Returns the UM version of the UKESM1_0_LL model.
+
+        :return: UM version of UKESM1_0_LL
+        :rtype: str
+        """
+        return "10.8"
 
 
 class AriseModelStore(BaseModelStore):
-
     def __init__(self):
         self.logger = logging.getLogger(self.__class__.__name__)
         models_to_include = [
             UKESM1_0_LL_Params(),
-            HadGEM3_GC31_LL_Params(),
         ]
         super(AriseModelStore, self).__init__(models_to_include)
 
     @classmethod
-    def create_instance(cls) -> 'AriseModelsStore':
+    def create_instance(cls) -> "AriseModelStore":
         return AriseModelStore()
 
     def _load_default_params(self) -> None:
-        local_dir = os.path.dirname(os.path.abspath(cmip6.__file__))
-        # alternative
-        # local_dir = os.path.dirname(os.path.abspath(_file__))
-        # then the file <local_dir>/data/model/<source_id>.json must exist
-        default_dir = os.path.join(local_dir, 'data/model')
+        local_dir = os.path.dirname(os.path.abspath(__file__))
+        default_dir = os.path.join(local_dir, "data/model")
         results = self.overload_params(default_dir)
         self._process_load_results(results)
 
     def _process_load_results(self, results: LoadResults) -> None:
         if results.unloaded:
-            template = ('Failed to load model parameters for model "{}" from '
-                        'file: "{}"')
-            error_messages = [
-                template.format(model_id, path)
-                for model_id, path in results.unloaded.items()
-            ]
-            self.logger.critical('\n'.join(error_messages))
-            raise RuntimeError('\n'.join(error_messages))
+            template = 'Failed to load model parameters for model "{}" from file: "{}"'
+            error_messages = [template.format(model_id, path) for model_id, path in results.unloaded.items()]
+            self.logger.warning("\n".join(error_messages))
+            raise RuntimeError("\n".join(error_messages))
 
 
 class AriseStreamInfo(BaseStreamInfo):
-
-    def __init__(self, config_path: str = '') -> None:
+    def __init__(self, config_path: str = "") -> None:
         if not config_path:
             local_dir = os.path.dirname(os.path.abspath(__file__))
-            config_path = os.path.join(local_dir, 'data/streams/streams_config.json')
+            config_path = os.path.join(local_dir, "data/streams/streams_config.json")
         super(AriseStreamInfo, self).__init__(config_path)
 
 
@@ -115,5 +169,5 @@ class AriseStreamStore(BaseStreamStore):
         super(AriseStreamStore, self).__init__(stream_info)
 
     @classmethod
-    def create_instance(cls) -> 'AriseStreamStore':
+    def create_instance(cls) -> "AriseStreamStore":
         return AriseStreamStore()
