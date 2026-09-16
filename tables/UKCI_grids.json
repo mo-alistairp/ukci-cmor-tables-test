@@ -1,13 +1,13 @@
 {
     "Header": {
-        "data_specs_version": "01.00.33",
+        "data_specs_version": "UKCI-0.1",
         "table_id": "Table grids",
-        "cmor_version": "3.5",
-        "table_date": "25 Feb 2022",
+        "cmor_version": "3.15",
+        "table_date": "15 Sep 2026",
         "missing_value": "1e20",
         "product": "output",
-        "Conventions": "CF-1.7 CMIP-6.2",
-        "mip_era": "ARISE"
+        "Conventions": "CF-1.12",
+        "mip_era": "UKCI"
     },
     "mapping_entry": {
         "sample_user_mapping": {
