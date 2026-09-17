@@ -1,7 +1,8 @@
 {
   "stream_file_frequency": {
     "quarterly": [
-      "ond"
+      "ond",
+      "apg"
     ],
     "monthly": [
       "ap4",
@@ -22,6 +23,7 @@
   },
   "cycle_length": {
     "ap4": "P5Y",
+    "apg": "P5Y",
     "ap5": "P5Y",
     "apm": "P5Y",
     "apu": "P5Y",
@@ -37,6 +39,7 @@
   },
   "memory": {
     "ap4": "12G",
+    "apg": "12G",
     "ap5": "8G",
     "apm": "8G",
     "apu": "8G",
@@ -48,10 +51,13 @@
     "ind": "8G",
     "inm": "8G",
     "ond": "32G",
-    "onm": "16G"
+    "onm": "16G",
+    "afx": "8G",
+    "ofx": "8G"
   },
   "temp_space": {
     "ap4": 98304,
+    "apg": 98304,
     "ap5": 40960,
     "apm": 8192,
     "apu": 20480,
@@ -63,7 +69,9 @@
     "ind": 8192,
     "inm": 8192,
     "ond": 32768,
-    "onm": 32768
+    "onm": 32768,
+    "afx": 8192,
+    "ofx": 8192
   },
   "sizing_info": {
     "mon": {
@@ -187,7 +195,8 @@
       "levels": 85,
       "ancil_filenames": [
         "qrparm.landfrac.pp",
-        "qrparm.soil.pp"
+        "qrparm.soil.pp",
+        "qrparm.orog.pp"
       ],
       "hybrid_heights_files": [
         "atmosphere_theta_levels_85.txt",
@@ -200,7 +209,7 @@
       "longitude": 360,
       "latitude": 330,
       "levels": 75,
-      "replacement_coordinates_file": "cice_eORCA1_coords.nc",
+      "replacement_coordinate_files": ["cice_eORCA1_coords.nc"],
       "ancil_filenames": [
         "ocean_constants.nc",
         "ocean_byte_masks.nc",
@@ -208,6 +217,28 @@
         "diaptr_basin_masks.nc",
         "ocean_zostoga.nc"
       ],
+      "halo_removal": {
+        "onm": [
+          [
+            1,
+            -1
+          ],
+          [
+            1,
+            -1
+          ]
+        ],
+        "ond": [
+          [
+            1,
+            -1
+          ],
+          [
+            1,
+            -1
+          ]
+        ]
+      },
       "masked": {
         "grid-V": {
           "slice_latitude": [

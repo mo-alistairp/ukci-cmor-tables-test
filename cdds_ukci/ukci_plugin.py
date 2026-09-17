@@ -25,15 +25,15 @@ from cdds.common.plugins.grid import GridLabel
 from cdds.common.plugins.models import ModelParameters
 from cdds.common.plugins.streams import StreamInfo
 
-ARISE_LICENSE = (
-    "ARISE data produced by MOHC is licensed under the Open Government License v3 "
+UKCI_LICENSE = (
+    "UKCI data produced by MOHC is licensed under the Open Government License v3 "
     "(https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/)"
 )
 
 
-class AriseModelId(ModelId):
+class UKCIModelId(ModelId):
     """
-    Represents the ID of an Arise model.
+    Represents the ID of an UKCI model.
     """
 
     def get_json_file(self) -> str:
@@ -45,19 +45,19 @@ class AriseModelId(ModelId):
         """
         return "{}.json".format(self.value)
 
-    UKESM1_0_LL = "UKESM1-0-LL"
+    HadGEM3_GC31_LL = "HadGEM3-GC31-LL"
 
 
-class ArisePlugin(BasePlugin):
+class UKCIPlugin(BasePlugin):
     def __init__(self):
-        super(ArisePlugin, self).__init__("ARISE")
+        super(UKCIPlugin, self).__init__("UKCI")
 
     def models_parameters(self, model_id: str) -> ModelParameters:
-        models_store = AriseModelStore.instance()
+        models_store = UKCIModelStore.instance()
         return models_store.get(model_id)
 
     def overload_models_parameters(self, source_dir: str) -> None:
-        models_store = AriseModelStore.instance()
+        models_store = UKCIModelStore.instance()
         models_store.overload_params(source_dir)
 
     def grid_labels(self) -> Type[GridLabel]:
@@ -65,7 +65,7 @@ class ArisePlugin(BasePlugin):
         return Cmip6GridLabel
 
     def stream_info(self) -> StreamInfo:
-        stream_store = AriseStreamStore.instance()
+        stream_store = UKCIStreamStore.instance()
         return stream_store.get()
 
     def global_attributes(self, request: "Request") -> Cmip6GlobalAttributes:
@@ -84,26 +84,26 @@ class ArisePlugin(BasePlugin):
         return GlobalModelFileInfo()
 
     def license(self) -> str:
-        return ARISE_LICENSE
+        return UKCI_LICENSE
 
     def mip_table_dir(self) -> str:
-        return "{}/mip_tables/ARISE/for_functional_tests".format(os.environ["CDDS_ETC"])
+        return "{}/mip_tables/UKCI/for_functional_tests".format(os.environ["CDDS_ETC"])
 
 
-class UKESM1_0_LL_Params(BaseModelParameters):
+class HadGEM3_GC31_LL_Params(BaseModelParameters):
     """
-    Class to store the parameters for the UKESM1_0_LL model.
+    Class to store the parameters for the HadGEM3_GC31_LL model.
     """
 
     def __init__(self) -> None:
-        super(UKESM1_0_LL_Params, self).__init__(AriseModelId.UKESM1_0_LL)
+        super(HadGEM3_GC31_LL_Params, self).__init__(UKCIModelId.HadGEM3_GC31_LL)
 
     @property
     def model_version(self) -> str:
         """
-        Returns the model version of the UKESM1_0_LL model.
+        Returns the model version of the HadGEM3_GC31_LL model.
 
-        :return: Model version of UKESM1_0_LL
+        :return: Model version of HadGEM3_GC31_LL
         :rtype: str
         """
         return "1.0"
@@ -111,35 +111,35 @@ class UKESM1_0_LL_Params(BaseModelParameters):
     @property
     def data_request_version(self) -> str:
         """
-        Returns the data request version of the UKESM1_0_LL model.
+        Returns the data request version of the HadGEM3_GC31_LL model.
 
-        :return: Data request version of UKESM1_0_LL
+        :return: Data request version of HadGEM3_GC31_LL
         :rtype: str
         """
-        return "01.00.17"
+        return "1.0"
 
     @property
     def um_version(self) -> str:
         """
-        Returns the UM version of the UKESM1_0_LL model.
+        Returns the UM version of the HadGEM3_GC31_LL model.
 
-        :return: UM version of UKESM1_0_LL
+        :return: UM version of HadGEM3_GC31_LL
         :rtype: str
         """
-        return "10.8"
+        return "10.0"
 
 
-class AriseModelStore(BaseModelStore):
+class UKCIModelStore(BaseModelStore):
     def __init__(self):
         self.logger = logging.getLogger(self.__class__.__name__)
         models_to_include = [
-            UKESM1_0_LL_Params(),
+            HadGEM3_GC31_LL_Params(),
         ]
-        super(AriseModelStore, self).__init__(models_to_include)
+        super(UKCIModelStore, self).__init__(models_to_include)
 
     @classmethod
-    def create_instance(cls) -> "AriseModelStore":
-        return AriseModelStore()
+    def create_instance(cls) -> "UKCIModelStore":
+        return UKCIModelStore()
 
     def _load_default_params(self) -> None:
         local_dir = os.path.dirname(os.path.abspath(__file__))
@@ -155,19 +155,19 @@ class AriseModelStore(BaseModelStore):
             raise RuntimeError("\n".join(error_messages))
 
 
-class AriseStreamInfo(BaseStreamInfo):
+class UKCIStreamInfo(BaseStreamInfo):
     def __init__(self, config_path: str = "") -> None:
         if not config_path:
             local_dir = os.path.dirname(os.path.abspath(__file__))
             config_path = os.path.join(local_dir, "data/streams/streams_config.json")
-        super(AriseStreamInfo, self).__init__(config_path)
+        super(UKCIStreamInfo, self).__init__(config_path)
 
 
-class AriseStreamStore(BaseStreamStore):
+class UKCIStreamStore(BaseStreamStore):
     def __init__(self) -> None:
-        stream_info = AriseStreamInfo()
-        super(AriseStreamStore, self).__init__(stream_info)
+        stream_info = UKCIStreamInfo()
+        super(UKCIStreamStore, self).__init__(stream_info)
 
     @classmethod
-    def create_instance(cls) -> "AriseStreamStore":
-        return AriseStreamStore()
+    def create_instance(cls) -> "UKCIStreamStore":
+        return UKCIStreamStore()
