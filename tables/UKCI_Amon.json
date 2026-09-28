@@ -11,7 +11,7 @@
         "approx_interval": "30.00000",
         "generic_levels": "alevel alevhalf",
         "mip_era": "UKCI",
-        "Conventions": "CF-1.12"
+        "Conventions": "CF-1.7"
     },
     "variable_entry": {
         "ccb": {
