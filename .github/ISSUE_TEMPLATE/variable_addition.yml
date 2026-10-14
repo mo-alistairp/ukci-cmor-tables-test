@@ -1,0 +1,96 @@
+name: Variable addition
+description: Request a new variable in a UKCI MIP table
+title: "Add variable: "
+labels: ["variable_addition"]
+body:
+  - type: dropdown
+    id: table
+    attributes:
+      label: table
+      options:
+        - Amon
+        - Omon
+    validations:
+      required: true
+  - type: input
+    id: out_name
+    attributes:
+      label: out_name
+      description: Variable name (letters, digits, '-' or '_')
+      placeholder: tas
+    validations:
+      required: true
+  - type: input
+    id: frequency
+    attributes:
+      label: frequency
+      placeholder: mon
+    validations:
+      required: true
+  - type: input
+    id: modeling_realm
+    attributes:
+      label: modeling_realm
+      description: Space-separated realms
+      placeholder: atmos
+    validations:
+      required: true
+  - type: input
+    id: standard_name
+    attributes:
+      label: standard_name
+      placeholder: air_temperature
+    validations:
+      required: true
+  - type: input
+    id: units
+    attributes:
+      label: units
+      placeholder: K
+    validations:
+      required: true
+  - type: input
+    id: cell_methods
+    attributes:
+      label: cell_methods
+      placeholder: "area: time: mean"
+  - type: input
+    id: cell_measures
+    attributes:
+      label: cell_measures
+      placeholder: "area: areacella"
+  - type: input
+    id: long_name
+    attributes:
+      label: long_name
+      placeholder: Near-Surface Air Temperature
+    validations:
+      required: true
+  - type: textarea
+    id: comment
+    attributes:
+      label: comment
+  - type: input
+    id: dimensions
+    attributes:
+      label: dimensions
+      placeholder: longitude latitude time height2m
+    validations:
+      required: true
+  - type: dropdown
+    id: positive
+    attributes:
+      label: positive
+      options:
+        - none
+        - up
+        - down
+      default: 0
+  - type: input
+    id: stream
+    attributes:
+      label: stream
+      description: CDDS stream for cdds_ukci/variables.txt
+      placeholder: ap5
+    validations:
+      required: true
