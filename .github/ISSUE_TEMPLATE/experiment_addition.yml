@@ -1,0 +1,64 @@
+name: Experiment addition
+description: Request a new experiment_id in UKCI_CV.json
+title: "Add experiment_id: "
+labels: ["cv_addition"]
+body:
+  - type: input
+    id: experiment_id
+    attributes:
+      label: experiment_id
+      description: Short identifier (letters, digits, '-' or '_')
+      placeholder: 1pctCO2
+    validations:
+      required: true
+  - type: input
+    id: experiment
+    attributes:
+      label: experiment
+      description: Description of the experiment
+      placeholder: 1 percent per year increase in CO2
+    validations:
+      required: true
+  - type: dropdown
+    id: activity_id
+    attributes:
+      label: activity_id
+      options:
+        - UKCP18
+    validations:
+      required: true
+  - type: input
+    id: required_model_components
+    attributes:
+      label: required_model_components
+      description: Comma-separated source_type values
+      placeholder: AOGCM
+    validations:
+      required: true
+  - type: input
+    id: additional_allowed_model_components
+    attributes:
+      label: additional_allowed_model_components
+      description: Comma-separated source_type values (optional)
+      placeholder: AER, CHEM, BGC
+  - type: input
+    id: parent_experiment_id
+    attributes:
+      label: parent_experiment_id
+      value: none
+    validations:
+      required: true
+  - type: input
+    id: parent_activity_id
+    attributes:
+      label: parent_activity_id
+      value: none
+    validations:
+      required: true
+  - type: input
+    id: sub_experiment_id
+    attributes:
+      label: sub_experiment_id
+      value: none
+    validations:
+      required: true
