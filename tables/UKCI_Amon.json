@@ -1363,6 +1363,24 @@
             "valid_max": "",
             "ok_min_mean_abs": "",
             "ok_max_mean_abs": ""
+        },
+        "test": {
+            "frequency": "mon",
+            "modeling_realm": "atmos",
+            "standard_name": "air_temperature",
+            "units": "K",
+            "cell_methods": "test",
+            "cell_measures": "test",
+            "long_name": "test",
+            "comment": "",
+            "dimensions": "time",
+            "out_name": "test",
+            "type": "real",
+            "positive": "",
+            "valid_min": "",
+            "valid_max": "",
+            "ok_min_mean_abs": "",
+            "ok_max_mean_abs": ""
         }
     }
 }
