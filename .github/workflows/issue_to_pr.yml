@@ -12,7 +12,7 @@ permissions:
 jobs:
   process-issue:
     if: >-
-      contains(github.event.issue.labels.*.name, 'cv_addition') ||
+      contains(github.event.issue.labels.*.name, 'experiment_addition') ||
       contains(github.event.issue.labels.*.name, 'variable_addition')
     runs-on: ubuntu-latest
     env:

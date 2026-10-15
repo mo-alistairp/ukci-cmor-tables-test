@@ -135,7 +135,7 @@ def add_variable(fields):
     check_allowed("modeling_realm", modeling_realm.split(), cv["realm"])
 
     positive = fields.get("positive", "").strip()
-    if positive == "none":
+    if positive == "directionless":
         positive = ""
     check_allowed("positive", [positive], ["", "up", "down"])
 
@@ -161,7 +161,6 @@ def add_variable(fields):
         "ok_min_mean_abs": "",
         "ok_max_mean_abs": "",
     }
-    table_data["Header"]["table_date"] = datetime.now(timezone.utc).strftime("%d %b %Y")
     write_json(table_path, table_data)
 
     line = f"{table}/{out_name}:{stream}"
@@ -175,7 +174,7 @@ def add_variable(fields):
 
 
 HANDLERS = {
-    "cv_addition": add_experiment,
+    "experiment_addition": add_experiment,
     "variable_addition": add_variable,
 }
 

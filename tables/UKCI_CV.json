@@ -41,7 +41,7 @@
             "specs_doc":"Parallel to v6.2.7 (10th September 2018; https://goo.gl/v1drZl)"
         },
         "activity_id":{
-            "UKCP18": "UKCP18: UK Climate Projections 2018"
+            "UKCP18":"UKCP18: UK Climate Projections 2018"
         },
         "institution_id":{
             "MOHC":"Met Office Hadley Centre, Fitzroy Road, Exeter, Devon, EX1 3PB, UK"
