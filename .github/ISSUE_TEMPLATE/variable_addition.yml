@@ -85,7 +85,7 @@ body:
         - directionless
         - up
         - down
-      default: directionless
+      default: 0
   - type: input
     id: stream
     attributes:
