@@ -47,10 +47,10 @@ jobs:
           git checkout -b "$BRANCH"
           git add tables/ cdds_ukci/variables.txt
           if git diff --cached --quiet; then
-            echo "No changes were generated." | tee "$RUNNER_TEMP/update.log"
+            echo "No changes were generated. Check inputs and the Generate code step for any failures." | tee "$RUNNER_TEMP/update.log"
             exit 1
           fi
-          git commit -m "Apply issue #${ISSUE_NUMBER}: ${ISSUE_TITLE}"
+          git commit -m "Converted issue #${ISSUE_NUMBER}: ${ISSUE_TITLE}"
           git push origin "$BRANCH"
 
       - name: Create PR
