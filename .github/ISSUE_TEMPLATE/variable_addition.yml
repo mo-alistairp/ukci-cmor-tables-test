@@ -82,10 +82,10 @@ body:
     attributes:
       label: positive
       options:
-        - 
+        - directionless
         - up
         - down
-      default: 0
+      default: directionless
   - type: input
     id: stream
     attributes:
