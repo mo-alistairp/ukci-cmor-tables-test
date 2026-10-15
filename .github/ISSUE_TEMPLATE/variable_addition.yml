@@ -82,7 +82,7 @@ body:
     attributes:
       label: positive
       options:
-        - none
+        - 
         - up
         - down
       default: 0
